@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+
 
 
 
@@ -16,6 +18,9 @@ public class MainController : MonoBehaviour
     private bool isMove;
     private bool isJump;
 
+    NavMeshAgent agent;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -24,13 +29,36 @@ public class MainController : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         col = GetComponent<BoxCollider>();
 
+        agent = GetComponent<NavMeshAgent>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
         TryWalk();
-       StartCoroutine ( TryJump());
+        StartCoroutine ( TryJump());
+
+        if (Input.GetMouseButtonDown(0)) //왼쪽 마우스 클릭
+        {
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if(Physics.Raycast(ray, out hit))
+            {
+                // 레이캐스트 성공시, 즉 눌렀을 때 내비매쉬에 클릭 됐을 때
+                agent.SetDestination(hit.point);
+
+
+          
+                anim.Play("MOVE",-1, 3f);
+
+
+            }
+
+        }
+
 
     }
 
